@@ -35,7 +35,7 @@ class Window():
             if event == 'remove':
                 self.window['listview'].update(values=[])
             if event == 'save':
-                with open('config.json', 'w') as f:
+                with open('gesture_data/config.json', 'w') as f:
                     f.write(json.dumps(self.entries, default=lambda o: o.__dict__, sort_keys=True, indent=4))
             
         self.window.close()
