@@ -4,7 +4,7 @@ import json
 import matplotlib.pyplot as plt
 fig, axs = plt.subplots(2, 3, subplot_kw=dict(projection='3d'))
 
-files = glob.glob("gesture_data/*.dat")
+files = glob.glob("gesture_data_old/*.dat")
 xt = 1
 yt = 2
 for file in files:

@@ -1,2 +1,3 @@
 **/*.pyc
 **/*.dat
+gesture_data_new/*.csv
