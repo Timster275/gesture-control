@@ -1,6 +1,5 @@
 import cv2
 import mediapipe as mp
-import win32gui as win32gui
 import pyautogui as pyautogui
 from time import sleep
 import time as time
@@ -15,11 +14,9 @@ def detect_window_in_focus():
     Detects the window in focus. 
     """
     # Get the window in focus
-    window = win32gui.GetForegroundWindow()
-    # Get the window name
-    window_name = win32gui.GetWindowText(window)
-    # Get the window class
-    window_class = win32gui.GetClassName(window)
+    window = pyautogui.getActiveWindow()
+    window_name = window.title
+    window_class = window._hWnd
 
     return window_name, window_class
 
