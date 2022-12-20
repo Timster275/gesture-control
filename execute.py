@@ -53,6 +53,3 @@ class Executor():
             'f12': Key.f12
         }
         return translator[key]
-
-executor = Executor()
-executor.executeSimple('1')
