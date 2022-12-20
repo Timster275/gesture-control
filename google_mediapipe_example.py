@@ -57,6 +57,10 @@ def do_action():
         print(window_name)
         if(detect_window_in_focus()[0].find("PowerPoint") != -1):
             pyautogui.press('right')
+        elif(detect_window_in_focus()[0].find("Edge") != -1 or detect_window_in_focus()[0].find("Chrome") != -1):
+            pyautogui.keyDown('ctrl')
+            pyautogui.press('tab')
+            pyautogui.keyUp('ctrl')
         else:
             pyautogui.press('playpause')
             # alert the user that the song is paused
