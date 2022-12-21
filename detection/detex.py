@@ -14,13 +14,14 @@ hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
 
 
-model = load_model('keypoint_classifier.hdf5')
+model = load_model('model.hdf5')
 
 classNames = {
     0: "Flat Hand",
     1: "O-Kay",
     2: "Hand Side",
-    3: "Three Fingers"
+    3: "Three Fingers",
+    4: "Fist"
 }
 
 
@@ -48,6 +49,7 @@ while True:
         for handslms in result.multi_hand_landmarks:
             i = 0
             for lm in handslms.landmark:
+                # ignore
                 lmx = int(lm.x * image_width)
                 lmy = int(lm.y * image_height)
                 if i == 0:
@@ -58,7 +60,7 @@ while True:
                 else:
                     lmx = lmx - temp_x
                     lmy = lmy - temp_y
-
+                # dont ignore 
                 landmarks.append(lm.x)
                 landmarks.append(lm.y)
 
