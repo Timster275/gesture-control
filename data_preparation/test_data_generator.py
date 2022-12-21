@@ -34,7 +34,9 @@ for i in range(200):
                 hmX.append(cx)
                 hmX.append(cy)
                 hmX.append(cz)
+
             hdX1.append(hmX)
+
 class DF:
     def __init__(self, name, x):#, y, z):
         self.name = name
