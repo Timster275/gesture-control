@@ -14,7 +14,7 @@ hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
 
 
-model = load_model('model.hdf5')
+model = load_model('keypoint_classifier.hdf5')
 
 classNames = {
     0: "Flat Hand",
