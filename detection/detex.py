@@ -16,7 +16,7 @@ mpDraw = mp.solutions.drawing_utils
 historyPredictions = []
 WAITING_TIME = 1
 
-model = load_model('model.hdf5')
+model = load_model('gesture_detection_model.hdf5')
 
 classNames = {
     0: "Stop",

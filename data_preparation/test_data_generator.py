@@ -17,7 +17,7 @@ hdZ1 = []
 
 # get the gesture from the arguments
 gesture = sys.argv[1]
-for i in range(200):
+for i in range(2000):
     _, img = cam.read()
     img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     results = hands.process(img_RGB)
@@ -33,7 +33,6 @@ for i in range(200):
 
                 hmX.append(cx)
                 hmX.append(cy)
-                hmX.append(cz)
 
             hdX1.append(hmX)
 
@@ -47,10 +46,13 @@ class DF:
         with open("gesture_data_new/" + self.name + ".dat", "w+") as f:
             f.write(json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4))
 
+
 df = DF(gesture, hdX1)#, hdY1, hdZ1)
 df.save()
+
 # fig = plt.figure()
 # ax = fig.add_subplot(projection='3d')
+# ax.scatter()
 # ax.scatter(hdX, hdY, hdZ)
 # plt.scatter(hdX1, hdY1, label="Hands")
 # plt.show(block=True)
