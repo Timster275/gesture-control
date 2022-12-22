@@ -19,8 +19,14 @@ WAITING_TIME = 1
 model = load_model('model.hdf5')
 
 classNames = {
-    0: "open_hand",
-    1: "fist",
+    0: "Stop",
+    1: "Fist up",
+    2: "OK",
+    3: "Down",
+    4: "Fist",
+    5: "Left",
+    6: "Right"
+    
 }
 
 
@@ -100,7 +106,7 @@ while True:
         className, classId = predict_class(landmarks)
 
         if(len(historyPredictions) > 9):
-            do_action()
+            # do_action()
             historyPredictions.clear()
     cv2.putText(framergb, className, (450, 220), cv2.FONT_HERSHEY_SIMPLEX,
                 1, (0, 0, 255), 2, cv2.LINE_AA)
@@ -109,8 +115,8 @@ while True:
     if cv2.waitKey(1) == ord('q'):
         break
     # click on exit button to exit
-    if cv2.getWindowProperty('Output', cv2.WND_PROP_VISIBLE) < 1:
-        break
+    # if cv2.getWindowProperty('Output', cv2.WND_PROP_VISIBLE) < 1:
+    #     break
 
 cap.release()
 
