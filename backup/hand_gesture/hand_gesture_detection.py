@@ -1,16 +1,16 @@
 # import necessary packages
-from gesture_methods import do_action
+from gesture_methods import do_action, move_cursor, set_mouse_up
 import cv2
 import numpy as np
 import mediapipe as mp
 from keras.models import load_model
 from common_methods import load_class_names
 from gesture_methods import settings
-
+import multiprocessing
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
-hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
+hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.8)
 mpDraw = mp.solutions.drawing_utils
 
 # Load the gesture recognizer model
@@ -68,18 +68,24 @@ while True:
             landmarks = landmarks + get_landmarks(handslms)
 
             # Drawing landmarks on frames
-            mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
+            # mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
 
             className = predict_gesture(landmarks)
+
+            if(className == "stop"):
+                if move_cursor(landmarks[8]) is True:
+                    continue
 
             if(len(historyPredictions) > 10):
                 do_action(max(set(historyPredictions),
                           key=historyPredictions.count))
                 historyPredictions.clear()
+    else:
+        set_mouse_up()
 
     # show the prediction on the frame
-    cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
-                1, (0, 0, 255), 2, cv2.LINE_AA)
+    # cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
+    #             1, (0, 0, 255), 2, cv2.LINE_AA)
 
     # Show the final output
     cv2.imshow("Output", frame)

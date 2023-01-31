@@ -21,13 +21,19 @@ class state:
 
 
 settings = state()
+isDown = False
+screenWidth, screenHeight = pyautogui.size()
 
 
 def get_active_window():
+    if(pyautogui.getActiveWindow() == None):
+        return "None"
     return pyautogui.getActiveWindow().title
 
 
 def do_action(prediction):
+    if(prediction != "fist"):
+        pyautogui.mouseUp()
     if(prediction == "stop"):
         do_action_open_hand()
     elif(prediction == "fist"):
@@ -51,8 +57,23 @@ def do_action_open_hand():
         pyautogui.press('playpause')
 
 
+def move_cursor(position):
+    if(get_active_window().find("Minecraft") != -1):
+        x = position[0]
+        y = position[1]
+        x = x * screenWidth / 640
+        y = y * screenHeight / 480
+        pyautogui.moveTo(x, y)
+        return True
+    return False
+
+
 def do_action_fist():
     if(settings.isInTaskSwitcher):
+        return
+    if(get_active_window().find("Minecraft") != -1):
+        pyautogui.mouseDown()
+        isDown = True
         return
     pyautogui.keyDown('alt')
     pyautogui.press('tab')
@@ -66,3 +87,9 @@ def do_action_okay():
     pyautogui.keyUp('enter')
     pyautogui.keyUp('alt')
     settings.isInTaskSwitcher = False
+
+
+def set_mouse_up():
+    if(get_active_window().find("Minecraft") != -1 and isDown == True):
+        pyautogui.mouseUp()
+        return
