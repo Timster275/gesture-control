@@ -32,7 +32,6 @@ def get_active_window():
 
 
 def do_action(prediction, movement_direction):
-    print(prediction)
     if (prediction != "fist"):
         pyautogui.mouseUp()
     if (prediction == "stop" or prediction == "live long"):
@@ -46,7 +45,7 @@ def do_action(prediction, movement_direction):
 
 
 def do_action_open_hand(direction):
-    if (settings.isInTaskSwitcher):
+    if (settings.isInTaskSwitcher and direction != ''):
         pyautogui.keyDown(direction)
         pyautogui.keyUp(direction)
         return
@@ -65,7 +64,6 @@ def click():
 
 
 def do_action_fist():
-    print(settings.isInTaskSwitcher)
     if (settings.isInTaskSwitcher):
         pyautogui.keyUp('alt')
         settings.isInTaskSwitcher = False

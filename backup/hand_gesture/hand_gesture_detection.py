@@ -57,12 +57,8 @@ def get_movement_direction(landmarks):
     movement_name = ''
     if (direction > 20):
         movement_name = 'right'
-    elif (direction < 20):
+    elif (direction < -20):
         movement_name = 'left'
-    elif (max_diff_index == 1):
-        movement_name = 'up'
-    else:
-        movement_name = 'down'
     return movement_name
 
 
