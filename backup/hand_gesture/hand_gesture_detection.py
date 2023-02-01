@@ -1,12 +1,14 @@
 # import necessary packages
-from gesture_methods import do_action, move_cursor, set_mouse_up
+import multiprocessing
+from gesture_methods import do_action, set_mouse_up, click
 import cv2
 import numpy as np
 import mediapipe as mp
 from keras.models import load_model
 from common_methods import load_class_names
 from gesture_methods import settings
-import multiprocessing
+import tensorflow as tf
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
@@ -21,6 +23,7 @@ model = load_model('mp_hand_gesture')
 classNames = load_class_names('gesture.names')
 
 historyPredictions = []
+historyLandmarks = []
 
 
 def get_landmarks(hands_lms):
@@ -33,6 +36,34 @@ def get_landmarks(hands_lms):
         landmarks.append([lmx, lmy])
 
     return landmarks
+
+
+def get_movement_direction(landmarks):
+    # should be right, left, up, down
+    # get the first landmark
+    first = landmarks[-1]
+    # get the last landmark
+    last = landmarks[0]
+    # get the difference between the first and last landmark
+    diff = [first[0] - last[0], first[1] - last[1]]
+    # get the absolute value of the difference
+    abs_diff = [abs(diff[0]), abs(diff[1])]
+    # get the max value of the difference
+    max_diff = max(abs_diff)
+    # get the index of the max value
+    max_diff_index = abs_diff.index(max_diff)
+    # get the direction of the movement
+    direction = diff[max_diff_index]
+    movement_name = ''
+    if (direction > 20):
+        movement_name = 'right'
+    elif (direction < 20):
+        movement_name = 'left'
+    elif (max_diff_index == 1):
+        movement_name = 'up'
+    else:
+        movement_name = 'down'
+    return movement_name
 
 
 def predict_gesture(landmarks):
@@ -72,14 +103,12 @@ while True:
 
             className = predict_gesture(landmarks)
 
-            if(className == "stop"):
-                if move_cursor(landmarks[8]) is True:
-                    continue
-
-            if(len(historyPredictions) > 10):
+            historyLandmarks.append(landmarks[0])
+            if (len(historyPredictions) > 10):
                 do_action(max(set(historyPredictions),
-                          key=historyPredictions.count))
+                          key=historyPredictions.count), get_movement_direction(historyLandmarks))
                 historyPredictions.clear()
+                historyLandmarks.clear()
     else:
         set_mouse_up()
 
