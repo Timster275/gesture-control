@@ -98,15 +98,13 @@ while True:
             historyLandmarks.append(landmarks[0])
 
             if (settings.isInTaskSwitcher and len(historyPredictions) > 3):
-                trhead = multiprocessing.Process(target=do_action, args=(max(set(historyPredictions),
-                                                                             key=historyPredictions.count), get_movement_direction(historyLandmarks)))
-                trhead.run()
+                do_action(max(set(historyPredictions),
+                              key=historyPredictions.count), get_movement_direction(historyLandmarks))
                 historyPredictions.clear()
                 historyLandmarks.clear()
             if (len(historyPredictions) > 7):
-                trhead = multiprocessing.Process(target=do_action, args=(max(set(historyPredictions),
-                                                                             key=historyPredictions.count), get_movement_direction(historyLandmarks)))
-                trhead.run()
+                do_action(max(set(historyPredictions),
+                              key=historyPredictions.count), get_movement_direction(historyLandmarks))
                 historyPredictions.clear()
                 historyLandmarks.clear()
     else:
