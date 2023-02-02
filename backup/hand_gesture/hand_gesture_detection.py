@@ -7,8 +7,6 @@ import mediapipe as mp
 from keras.models import load_model
 from common_methods import load_class_names
 from gesture_methods import settings
-import tensorflow as tf
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
@@ -55,10 +53,11 @@ def get_movement_direction(landmarks):
     # get the direction of the movement
     direction = diff[max_diff_index]
     movement_name = ''
-    if (direction > 20):
+    if (direction > 5):
         movement_name = 'right'
-    elif (direction < -20):
+    elif (direction < -5):
         movement_name = 'left'
+    print(direction, movement_name)
     return movement_name
 
 
@@ -94,26 +93,33 @@ while True:
         for handslms in result.multi_hand_landmarks:
             landmarks = landmarks + get_landmarks(handslms)
 
-            # Drawing landmarks on frames
-            # mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
-
             className = predict_gesture(landmarks)
 
             historyLandmarks.append(landmarks[0])
-            if (len(historyPredictions) > 10):
-                do_action(max(set(historyPredictions),
-                          key=historyPredictions.count), get_movement_direction(historyLandmarks))
+
+            if (settings.isInTaskSwitcher and len(historyPredictions) > 3):
+                trhead = multiprocessing.Process(target=do_action, args=(max(set(historyPredictions),
+                                                                             key=historyPredictions.count), get_movement_direction(historyLandmarks)))
+                trhead.run()
+                historyPredictions.clear()
+                historyLandmarks.clear()
+            if (len(historyPredictions) > 7):
+                trhead = multiprocessing.Process(target=do_action, args=(max(set(historyPredictions),
+                                                                             key=historyPredictions.count), get_movement_direction(historyLandmarks)))
+                trhead.run()
                 historyPredictions.clear()
                 historyLandmarks.clear()
     else:
         set_mouse_up()
+        historyPredictions.clear()
+        historyLandmarks.clear()
 
     # show the prediction on the frame
     # cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
     #             1, (0, 0, 255), 2, cv2.LINE_AA)
 
     # Show the final output
-    cv2.imshow("Output", frame)
+    # cv2.imshow("Output", frame)
 
     if cv2.waitKey(1) == ord('q'):
         break

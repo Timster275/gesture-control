@@ -45,11 +45,16 @@ def do_action(prediction, movement_direction):
 
 
 def do_action_open_hand(direction):
-    if (settings.isInTaskSwitcher and direction != ''):
-        pyautogui.keyDown(direction)
-        pyautogui.keyUp(direction)
+    if (settings.isInTaskSwitcher):
+        if direction != '':
+            pyautogui.keyDown(direction)
+            pyautogui.keyUp(direction)
         return
-    if get_active_window().find("PowerPoint") != -1:
+    if get_active_window().find("Photos") != -1:
+        if direction != '':
+            pyautogui.keyDown(direction)
+            pyautogui.keyUp(direction)
+    elif get_active_window().find("PowerPoint") != -1:
         pyautogui.press('right')
     elif get_active_window().find("Edge") != -1 or get_active_window().find("Chrome") != -1:
         pyautogui.keyDown('ctrl')
@@ -64,9 +69,11 @@ def click():
 
 
 def do_action_fist():
+    print("isFist", settings.isInTaskSwitcher)
     if (settings.isInTaskSwitcher):
         pyautogui.keyUp('alt')
         settings.isInTaskSwitcher = False
+        sleep(0.5)
         return
     if (get_active_window().find("Minecraft") != -1):
         pyautogui.mouseDown()
